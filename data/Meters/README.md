@@ -23,7 +23,7 @@ The data comes from [__DataSF__](https://data.sfgov.org/Transportation/Parking-M
 | LONGITUDE | Longitude of meter | Number |
 | LATITUDE | Latitude of meter| Number |
 | COLLECTION_ROUTE_DESC || Categorical |
-| COLLECTION_ROUTE_SUBROUTE_DESC || Categorical |
+| COLLECTION_SUBROUTE_DESC || Categorical |
 | Neighborhoods || Number|
 | Analysis Neighborhoods || Number |
 
