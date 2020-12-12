@@ -47,11 +47,6 @@ class RL_Trainer(object):
         self.env = gym.make(self.params['env_name'])
         self.env.seed(seed)
 
-        # import plotting (locally if 'obstacles' env)
-        if not(self.params['env_name']=='obstacles-cs285-v0'):
-            import matplotlib
-            matplotlib.use('Agg')
-
         # Maximum length for episodes
         self.params['ep_len'] = self.params['ep_len'] or self.env.spec.max_episode_steps
         global MAX_VIDEO_LEN
@@ -72,14 +67,14 @@ class RL_Trainer(object):
         self.params['agent_params']['ob_dim'] = ob_dim
 
         # simulation timestep, will be used for video saving
-        if 'model' in dir(self.env):
-            self.fps = 1/self.env.model.opt.timestep
-        elif 'env_wrappers' in self.params:
-            self.fps = 30 # This is not actually used when using the Monitor wrapper
-        elif 'video.frames_per_second' in self.env.env.metadata.keys():
-            self.fps = self.env.env.metadata['video.frames_per_second']
-        else:
-            self.fps = 10
+        # if 'model' in dir(self.env):
+        #     self.fps = 1/self.env.model.opt.timestep
+        # elif 'env_wrappers' in self.params:
+        #     self.fps = 30 # This is not actually used when using the Monitor wrapper
+        # elif 'video.frames_per_second' in self.env.env.metadata.keys():
+        #     self.fps = self.env.env.metadata['video.frames_per_second']
+        # else:
+        #     self.fps = 10
 
 
         #############
