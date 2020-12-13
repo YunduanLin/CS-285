@@ -3,17 +3,18 @@ import numpy as np
 EARTH_D = 6371
 
 class parking_block():
-    def __init__(self, params):
+    def __init__(self, params, dist):
         self.id = params['BLOCKFACE_ID']
         self.loc = (params['LONGITUDE'], params['LATITUDE'])
         self.cap = params['SPACE_NUM']
         self.occupied = 0
+        self.backup_block = np.argsort(dist)
 
 class parking_env():
     def __init__(self, df):
         self.t = 0
         mat_distance = self.great_circle_v(df['LONGITUDE'].values, df['LATITUDE'].values)
-        self.blocks = [parking_block(record) for record in df.to_dict('records')]
+        self.blocks = [parking_block(record, mat_distance[i]) for i, record in enumerate(df.to_dict('records'))]
 
     def great_circle_v(self, lon, lat):
         lon, lat = np.radians(lon), np.radians(lat)
