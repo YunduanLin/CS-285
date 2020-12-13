@@ -3,6 +3,7 @@ import numpy as np
 EARTH_D = 6371
 MAX_E = 10
 VOT = 0.1
+SPEED = 30
 
 class parking_block():
     def __init__(self, params, dist):
@@ -70,8 +71,9 @@ class parking_env():
                 new_ind_block = self.blocks[v.loc_arrive].backup_block[v.ind_loc_current]
                 v.cruising_dist = self.blocks[ind_cur_block].dist[new_ind_block]
 
+
     # simulate the parking behavior with choice model
-    def do_simulation(self):
+    def do_simulation(self, a):
         self.t += 1
 
         # parked vehicles
@@ -90,17 +92,21 @@ class parking_env():
         for block in self.blocks:
             self.vehicles = np.append(self.vehicles, [vehicle({'id': block}) for _ in range(d[block])])
         for t_e in range(MAX_E-1):
-            for i, v in self.vehicles[num_parked_vehicles:]:
+            for v in self.vehicles[num_parked_vehicles:]:
                 if not v.parked:
+                    self.simulate_v_park(v, a)
 
+        reward = 0
+        for v in self.vehicles[num_parked_vehicles:]:
+            reward += v.fee - v.cruising_dist * SPEED
 
-
-        return
+        return reward
 
     # given the action, simulate the process and get the reward
     def step(self, a):
-        self.do_simulation()
-        return
+        reward = self.do_simulation(a)
+
+        return reward
 
     def _get_obs(self):
         pass
