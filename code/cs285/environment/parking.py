@@ -21,7 +21,17 @@ class parking_env():
         return EARTH_D * np.arccos(np.sin(lat) * np.sin(lat).reshape(-1, 1) \
                 + np.cos(lat) * np.cos(lat).reshape(-1, 1) * np.cos(lon-lon.reshape(-1, 1)))
 
+    def generate_demand(self):
+        return
+
+    def do_simulation(self):
+        return
+
     def step(self, a):
+        d = self.generate_demand()
+        for i, block in enumerate(self.blocks):
+            for u in range(d[i]):
+                self.do_simulation()
         return
 
     def _get_obs(self):
