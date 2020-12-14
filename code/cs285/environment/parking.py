@@ -27,6 +27,9 @@ class parking_block():
     def dec_v(self):
         self.occupied -= 1
 
+    def reset(self):
+        self.occupied = 0
+
     def __str__(self):
         return 'Block {id} {loc}\nOccupancy: {occ}/{cap}'.format(
                     id=self.block_id, loc=self.loc,
@@ -89,7 +92,7 @@ class parking_env():
 
     # simulate the parking behavior with choice model
     def do_simulation(self, a):
-        self.t += 1
+        self.t = (self.t + 1) % 24
 
         # parked vehicles
         ind_vehicles = []
@@ -127,10 +130,14 @@ class parking_env():
         return reward
 
     def _get_obs(self):
-        pass
+        return np.concatenate([self.t], [block.occupied for block in self.blocks])
 
     def reset_model(self):
-        pass
+        self.t = 0
+        self.vehicles = []
+        for b in self.blocks:
+            b.reset()
+        return self._get_obs()
 
     def viewer_setup(self):
         pass
