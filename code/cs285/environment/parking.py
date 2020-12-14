@@ -4,6 +4,7 @@ EARTH_D = 6371
 MAX_E = 10
 VOT = 0.1
 SPEED = 30
+LOSS_COST = 10
 
 class parking_block():
     def __init__(self, params, dist):
@@ -36,7 +37,8 @@ class vehicle():
         self.remaining_time = 0
 
     def dec_time(self):
-        self.remaining_time = self.remaining_time - 1 if self.remaining_time == 0 else 0
+        if self.remaining_time > 0:
+            self.remaining_time -= 1
 
     def inc_ind_loc(self):
         self.ind_loc_current += 1
@@ -46,7 +48,10 @@ class parking_env():
         self.t = 0
         mat_distance = self.great_circle_v(df['LONGITUDE'].values, df['LATITUDE'].values)
         self.blocks = [parking_block(record, mat_distance[i]) for i, record in enumerate(df.to_dict('records'))]
-        self.vehicles = np.empty(1)
+        self.vehicles = np.empty(0)
+
+    def seed(self, s):
+        np.random.seed(s)
 
     # calculate the great circle distance for all the blocks with matrix form
     def great_circle_v(self, lon, lat):
@@ -56,7 +61,7 @@ class parking_env():
 
     # generate demand for each block at time t
     def generate_demand(self):
-        return np.ones(len(self.blocks))
+        return np.ones(len(self.blocks)).astype(int)
 
     def simulate_v_park(self, v, p):
         ind_cur_block = self.blocks[v.loc_arrive].backup_block[v.ind_loc_current]
@@ -71,7 +76,6 @@ class parking_env():
                 new_ind_block = self.blocks[v.loc_arrive].backup_block[v.ind_loc_current]
                 v.cruising_dist = self.blocks[ind_cur_block].dist[new_ind_block]
 
-
     # simulate the parking behavior with choice model
     def do_simulation(self, a):
         self.t += 1
@@ -79,7 +83,7 @@ class parking_env():
         # parked vehicles
         ind_vehicles = []
         for i, v in enumerate(self.vehicles):
-            v.decrease_time()
+            v.dec_time()
             if v.remaining_time == 0:
                 self.blocks[v.loc_current].dec_v()
             else:
@@ -89,8 +93,8 @@ class parking_env():
         # parking vehicles
         num_parked_vehicles = len(self.vehicles)
         d = self.generate_demand()
-        for block in self.blocks:
-            self.vehicles = np.append(self.vehicles, [vehicle({'id': block}) for _ in range(d[block])])
+        for i, block in enumerate(self.blocks):
+            self.vehicles = np.append(self.vehicles, [vehicle({'id': i}) for _ in range(d[i])])
         for t_e in range(MAX_E-1):
             for v in self.vehicles[num_parked_vehicles:]:
                 if not v.parked:
@@ -98,7 +102,10 @@ class parking_env():
 
         reward = 0
         for v in self.vehicles[num_parked_vehicles:]:
-            reward += v.fee - v.cruising_dist * SPEED
+            if v.parked:
+                reward += v.fee - v.cruising_dist * SPEED
+            else:
+                reward -= LOSS_COST
 
         return reward
 

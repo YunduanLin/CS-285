@@ -12,6 +12,7 @@ from cs285.infrastructure import pytorch_util as ptu
 
 from cs285.infrastructure import utils
 from cs285.infrastructure.logger import Logger
+from cs285.environment import parking
 
 # how many rollouts to save as videos to tensorboard
 MAX_NVIDEO = 2
@@ -43,21 +44,22 @@ class RL_Trainer(object):
         ## ENV
         #############
 
-        # Make the gym environment
-        self.env = gym.make(self.params['env_name'])
+        # Make the environment
+        self.env = parking.parking_env()
         self.env.seed(seed)
 
         # Maximum length for episodes
-        self.params['ep_len'] = self.params['ep_len'] or self.env.spec.max_episode_steps
+        # self.params['ep_len'] = self.params['ep_len'] or self.env.spec.max_episode_steps
         global MAX_VIDEO_LEN
         MAX_VIDEO_LEN = self.params['ep_len']
 
         # Is this env continuous, or self.discrete?
-        discrete = isinstance(self.env.action_space, gym.spaces.Discrete)
+        # discrete = isinstance(self.env.action_space, gym.spaces.Discrete)
         # Are the observations images?
-        img = len(self.env.observation_space.shape) > 2
+        # img = len(self.env.observation_space.shape) > 2
+        discrete, img = False, False
 
-        self.params['agent_params']['discrete'] = discrete
+        self.params['agent_params']['discrete'] = discrete # continuous action space
 
         # Observation and action sizes
 
