@@ -4,7 +4,7 @@ EARTH_D = 6371
 MAX_E = 10
 VOT = 0.1
 SPEED = 30
-LOSS_COST = 10
+LOSS_COST = 5
 
 class parking_block():
     def __init__(self, params, dist):
@@ -120,7 +120,7 @@ class parking_env():
         reward = 0
         for v in self.vehicles[num_parked_vehicles:]:
             if v.parked:
-                reward += v.fee - v.cruising_dist * SPEED
+                reward += v.fee - v.cruising_dist / SPEED * VOT
             else:
                 reward -= LOSS_COST
 
