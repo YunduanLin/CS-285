@@ -27,6 +27,11 @@ class parking_block():
     def dec_v(self):
         self.occupied -= 1
 
+    def __str__(self):
+        return 'Block {id} {loc}\nOccupancy: {occ}/{cap}'.format(
+                    id=self.block_id, loc=self.loc,
+                    occ=self.occupied, cap=self.capacity)
+
 class vehicle():
     def __init__(self, params):
         self.loc_arrive = params['id']
@@ -42,6 +47,12 @@ class vehicle():
 
     def inc_ind_loc(self):
         self.ind_loc_current += 1
+
+    def __str__(self):
+        return 'Vehicle arrived at Block {arr}\n{parked}parked{text}'.format(
+                    arr=self.loc_arrive, parked='' if self.parked else 'not',
+                    text=' at the {cur}-th nearest block with total cruising distance {dist}\nThe remaining parking time is {rt}.'.format(
+                        cur=self.ind_loc_current, dist=self.cruising_dist, rt=self.remaining_time) if self.parked else '')
 
 class parking_env():
     def __init__(self, df):
@@ -123,3 +134,7 @@ class parking_env():
 
     def viewer_setup(self):
         pass
+
+    def __str__(self):
+        return 'At time {t}, there are {num_b} blocks and {num_v} vehicles.'.format(
+                    t=self.t, num_b=len(self.blocks), num_v=len(self.vehicles))
