@@ -63,6 +63,8 @@ class parking_env():
         mat_distance = self.great_circle_v(df['LONGITUDE'].values, df['LATITUDE'].values)
         self.blocks = [parking_block(record, mat_distance[i]) for i, record in enumerate(df.to_dict('records'))]
         self.vehicles = np.empty(0)
+        self.ob_dim = 1 + len(self.blocks)
+        self.ac_dim = len(self.blocks)
 
     def seed(self, s):
         np.random.seed(s)
@@ -99,7 +101,8 @@ class parking_env():
         for i, v in enumerate(self.vehicles):
             v.dec_time()
             if v.remaining_time == 0:
-                self.blocks[v.loc_current].dec_v()
+                ind_cur_block = self.blocks[v.loc_arrive].backup_block[v.ind_loc_current]
+                self.blocks[ind_cur_block].dec_v()
             else:
                 ind_vehicles.append(i)
         self.vehicles = self.vehicles[ind_vehicles]
@@ -126,21 +129,22 @@ class parking_env():
     # given the action, simulate the process and get the reward
     def step(self, a):
         reward = self.do_simulation(a)
-
-        return reward
+        ob = self._get_obs()
+        return ob, reward, False, None
 
     def _get_obs(self):
-        return np.concatenate([self.t], [block.occupied for block in self.blocks])
+        return np.concatenate([[self.t], [block.occupied for block in self.blocks]])
 
     def reset_model(self):
         self.t = 0
-        self.vehicles = []
+        self.vehicles = np.empty(0)
         for b in self.blocks:
             b.reset()
         return self._get_obs()
 
-    def viewer_setup(self):
-        pass
+    def reset(self):
+        ob = self.reset_model()
+        return ob
 
     def __str__(self):
         return 'At time {t}, there are {num_b} blocks and {num_v} vehicles.'.format(

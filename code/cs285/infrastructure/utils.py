@@ -63,16 +63,6 @@ def sample_trajectory(env, policy, max_path_length, render=False, render_mode=('
     steps = 0
     while True:
 
-        # # render image of the simulated env
-        # if render:
-        #     if 'rgb_array' in render_mode:
-        #         if hasattr(env, 'sim'):
-        #             image_obs.append(env.sim.render(camera_name='track', height=500, width=500)[::-1])
-        #         else:
-        #             image_obs.append(env.render(mode=render_mode))
-        #     if 'human' in render_mode:
-        #         env.render(mode=render_mode)
-        #         time.sleep(env.model.opt.timestep)
 
         # use the most recent ob to decide what to do
         obs.append(ob)
@@ -87,7 +77,6 @@ def sample_trajectory(env, policy, max_path_length, render=False, render_mode=('
         steps += 1
         next_obs.append(ob)
         rewards.append(rew)
-
         # HINT: rollout can end due to done, or due to max_path_length
         rollout_done = done | (steps == max_path_length)  # HINT: this is either 0 or 1
         terminals.append(rollout_done)

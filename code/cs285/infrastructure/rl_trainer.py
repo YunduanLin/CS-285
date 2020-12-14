@@ -4,9 +4,8 @@ import os
 import sys
 import time
 
-import gym
-from gym import wrappers
 import numpy as np
+import pandas as pd
 import torch
 from cs285.infrastructure import pytorch_util as ptu
 
@@ -45,7 +44,8 @@ class RL_Trainer(object):
         #############
 
         # Make the environment
-        self.env = parking.parking_env()
+        df = pd.read_csv('../data/Meters/Meter_block.csv')
+        self.env = parking.parking_env(df)
         self.env.seed(seed)
 
         # Maximum length for episodes
@@ -57,27 +57,16 @@ class RL_Trainer(object):
         # discrete = isinstance(self.env.action_space, gym.spaces.Discrete)
         # Are the observations images?
         # img = len(self.env.observation_space.shape) > 2
-        discrete, img = False, False
+        discrete = False
 
         self.params['agent_params']['discrete'] = discrete # continuous action space
 
         # Observation and action sizes
 
-        ob_dim = self.env.observation_space.shape if img else self.env.observation_space.shape[0]
-        ac_dim = self.env.action_space.n if discrete else self.env.action_space.shape[0]
+        ob_dim = self.env.ob_dim
+        ac_dim = self.env.ac_dim
         self.params['agent_params']['ac_dim'] = ac_dim
         self.params['agent_params']['ob_dim'] = ob_dim
-
-        # simulation timestep, will be used for video saving
-        # if 'model' in dir(self.env):
-        #     self.fps = 1/self.env.model.opt.timestep
-        # elif 'env_wrappers' in self.params:
-        #     self.fps = 30 # This is not actually used when using the Monitor wrapper
-        # elif 'video.frames_per_second' in self.env.env.metadata.keys():
-        #     self.fps = self.env.env.metadata['video.frames_per_second']
-        # else:
-        #     self.fps = 10
-
 
         #############
         ## AGENT
@@ -106,12 +95,7 @@ class RL_Trainer(object):
         for itr in range(n_iter):
             print("\n\n********** Iteration %i ************"%itr)
 
-            # decide if videos should be rendered/logged at this iteration
-            if itr % self.params['video_log_freq'] == 0 and self.params['video_log_freq'] != -1:
-                self.logvideo = True
-            else:
-                self.logvideo = False
-            self.log_video = self.logvideo
+            self.log_video = self.logvideo = False
 
             # decide if metrics should be logged
             if self.params['scalar_log_freq'] == -1:
@@ -156,9 +140,6 @@ class RL_Trainer(object):
         paths, envsteps_this_batch = utils.sample_trajectories(self.env, collect_policy, batch_size,
                                                                self.params['ep_len'])
         train_video_paths = None
-        if self.log_video:
-            print('\nCollecting train rollouts to be used for saving videos...')
-            train_video_paths = utils.sample_n_trajectories(self.env, collect_policy, MAX_NVIDEO, MAX_VIDEO_LEN, True)
         return paths, envsteps_this_batch, train_video_paths
 
     def train_agent(self):
@@ -184,18 +165,6 @@ class RL_Trainer(object):
         # collect eval trajectories, for logging
         print("\nCollecting data for eval...")
         eval_paths, eval_envsteps_this_batch = utils.sample_trajectories(self.env, eval_policy, self.params['eval_batch_size'], self.params['ep_len'])
-
-        # save eval rollouts as videos in tensorboard event file
-        if self.logvideo and train_video_paths != None:
-            print('\nCollecting video rollouts eval')
-            eval_video_paths = utils.sample_n_trajectories(self.env, eval_policy, MAX_NVIDEO, MAX_VIDEO_LEN, True)
-
-            #save train/eval videos
-            print('\nSaving train rollouts as videos...')
-            self.logger.log_paths_as_videos(train_video_paths, itr, fps=self.fps, max_videos_to_save=MAX_NVIDEO,
-                                            video_title='train_rollouts')
-            self.logger.log_paths_as_videos(eval_video_paths, itr, fps=self.fps,max_videos_to_save=MAX_NVIDEO,
-                                             video_title='eval_rollouts')
 
         #######################
 
