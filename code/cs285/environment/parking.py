@@ -1,4 +1,5 @@
 import numpy as np
+from datatime import datatime, timedelta
 
 EARTH_D = 6371
 MAX_E = 10
@@ -58,16 +59,33 @@ class vehicle():
                         cur=self.ind_loc_current, dist=self.cruising_dist, rt=self.remaining_time) if self.parked else '')
 
 class parking_env():
-    def __init__(self, df):
+    def __init__(self, df_block, df_demand):
+        self.date = datatime(2019,12,1)
         self.t = 0
-        mat_distance = self.great_circle_v(df['LONGITUDE'].values, df['LATITUDE'].values)
-        self.blocks = [parking_block(record, mat_distance[i]) for i, record in enumerate(df.to_dict('records'))]
+        mat_distance = self.great_circle_v(df_block['LONGITUDE'].values, df_block['LATITUDE'].values)
+        self.blocks = [parking_block(record, mat_distance[i]) for i, record in enumerate(df_block.to_dict('records'))]
         self.vehicles = np.empty(0)
-        self.ob_dim = 1 + len(self.blocks)
+        self.ob_dim = 2 + len(self.blocks)
         self.ac_dim = len(self.blocks)
 
     def seed(self, s):
         np.random.seed(s)
+
+    def identify_stage(dt):
+        if dt < datetime(2020, 3, 15):
+            return 'before', 0
+        elif (dt >= datetime(2020, 3, 15)) & (dt < datetime(2020, 5, 17)):
+            return 'shutdown', 1
+        elif (dt >= datetime(2020, 5, 17)) & (dt < datetime(2020, 7, 17)):
+            return 'reopen', 2
+        elif (dt >= datetime(2020, 7, 17)) & (dt < datetime(2020, 9, 30)):
+            return 'closed_due_to_state_re', 3
+        elif (dt >= datetime(2020, 9, 30)) & (dt < datetime(2020, 10, 20)):
+            return 'orange', 4
+        elif (dt >= datetime(2020, 10, 20)) & (dt < datetime(2020, 11, 13)): #
+            return 'yellow', 5
+        elif dt >= datetime(2020, 11, 13):
+            return 'rollback', 6
 
     # calculate the great circle distance for all the blocks with matrix form
     def great_circle_v(self, lon, lat):
@@ -77,7 +95,7 @@ class parking_env():
 
     # generate demand for each block at time t
     def generate_demand(self):
-        return np.ones(len(self.blocks)).astype(int)
+
 
     def simulate_v_park(self, v, p):
         ind_cur_block = self.blocks[v.loc_arrive].backup_block[v.ind_loc_current]
@@ -94,7 +112,9 @@ class parking_env():
 
     # simulate the parking behavior with choice model
     def do_simulation(self, a):
-        self.t = (self.t + 1) % 24
+        self.date = self.date + timedelta(minutes=30)
+        self.t = self.date.hour*2
+        self.stage = self.identify_stage(self.date)
 
         # parked vehicles
         ind_vehicles = []
@@ -130,10 +150,11 @@ class parking_env():
     def step(self, a):
         reward = self.do_simulation(a)
         ob = self._get_obs()
-        return ob, reward, False, None
+        done = self.date >= datatime(2020, 11, 30)
+        return ob, reward, done, None
 
     def _get_obs(self):
-        return np.concatenate([[self.t], [block.occupied for block in self.blocks]])
+        return np.concatenate([[self.stage, self.t], [block.occupied for block in self.blocks]])
 
     def reset_model(self):
         self.t = 0
