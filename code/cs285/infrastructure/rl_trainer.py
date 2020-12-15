@@ -49,15 +49,6 @@ class RL_Trainer(object):
         self.env = parking.parking_env(df_block, df_demand)
         self.env.seed(seed)
 
-        # Maximum length for episodes
-        # self.params['ep_len'] = self.params['ep_len'] or self.env.spec.max_episode_steps
-        global MAX_VIDEO_LEN
-        MAX_VIDEO_LEN = self.params['ep_len']
-
-        # Is this env continuous, or self.discrete?
-        # discrete = isinstance(self.env.action_space, gym.spaces.Discrete)
-        # Are the observations images?
-        # img = len(self.env.observation_space.shape) > 2
         discrete = False
 
         self.params['agent_params']['discrete'] = discrete # continuous action space
@@ -80,7 +71,7 @@ class RL_Trainer(object):
                           initial_expertdata=None, relabel_with_expert=False,
                           start_relabel_with_expert=1, expert_policy=None):
         """
-        :param n_iter:  number of (dagger) iterations
+        :param n_iter:  number of iterations
         :param collect_policy:
         :param eval_policy:
         :param initial_expertdata:

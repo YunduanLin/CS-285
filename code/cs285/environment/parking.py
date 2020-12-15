@@ -1,12 +1,13 @@
 import numpy as np
 from datetime import datetime, timedelta
 
-EARTH_D = 6371
+EARTH_D = 7917.5 # mi
 MAX_E = 10
 VOT = 0.1
 SPEED = 30
 LOSS_COST = 5
-MAX_THRESH = 10
+THRESH_MIN = 2
+THRESH_MAX = 5
 
 class parking_block():
     def __init__(self, params, dist):
@@ -16,7 +17,7 @@ class parking_block():
         self.block_id = params['BLOCKFACE_ID']
         self.loc = (params['LONGITUDE'], params['LATITUDE'])
         self.capacity = params['SPACE_NUM']
-        self.rate_area = params['OLD_RATE_AREA']
+        self.rate_area = params['OLD_RATE_AREA_id']
         self.occupied = 0   # the count of occupied meters
         self.dist = np.sort(dist)
         self.backup_block = np.argsort(dist)    # the priority of back-up blocks
@@ -41,6 +42,7 @@ class parking_block():
 class vehicle():
     def __init__(self, params):
         self.loc_arrive = params['id']
+        self.price_thresh = np.random.uniform(THRESH_MIN, THRESH_MAX)
         self.ind_loc_current = 0
         self.cruising_dist = 0
         self.parked = False
@@ -66,12 +68,12 @@ class parking_env():
         self.slot = 0
         self.stage = 0
         self.df_demand = df_demand
-        mat_distance = self.great_circle_v(df_block['LONGITUDE'].values, df_block['LATITUDE'].values)
+        # mat_distance = self.great_circle_v(df_block['LONGITUDE'].values, df_block['LATITUDE'].values)
+        mat_distance = self.manhattan_v(df_block['LONGITUDE'].values, df_block['LATITUDE'].values)
         self.blocks = [parking_block(record, mat_distance[i]) for i, record in enumerate(df_block.to_dict('records'))]
         self.vehicles = np.empty(0)
         self.ob_dim = 2 + len(self.blocks)
-        rate_area = dict(zip(df_block['OLD_RATE_AREA'].unique(), range(len(df_block['OLD_RATE_AREA'].unique()))))
-        self.ac_dim = len(df_block['OLD_RATE_AREA'].unique())
+        self.ac_dim = len(df_block['OLD_RATE_AREA_id'].unique())
 
     def seed(self, s):
         np.random.seed(s)
@@ -98,6 +100,9 @@ class parking_env():
         return EARTH_D * np.arccos(np.sin(lat) * np.sin(lat).reshape(-1, 1) \
                 + np.cos(lat) * np.cos(lat).reshape(-1, 1) * np.cos(lon-lon.reshape(-1, 1)))
 
+    def manhattan_v(self, lon, lat):
+        return 54.6 * np.abs(lon-lon.reshape(-1, 1)) + 69 * np.abs(lat-lat.reshape(-1, 1))
+
     # generate demand for each block at time t
     def generate_demand(self):
         df = self.df_demand[(self.df_demand['slot'] == self.slot) & (self.df_demand['stage'] == self.stage)]
@@ -107,11 +112,11 @@ class parking_env():
     def simulate_v_park(self, v, p):
         ind_cur_block = self.blocks[v.loc_arrive].backup_block[v.ind_loc_current]
         if not self.blocks[ind_cur_block].is_full():
-            if np.random.rand() > 0.1:
+            if p[self.blocks[ind_cur_block].rate_area] <= v.price_thresh:
                 v.parked = True
                 self.blocks[ind_cur_block].inc_v()
                 v.remaining_time = 2
-                v.fee = v.remaining_time * p
+                v.fee = v.remaining_time * p[self.blocks[ind_cur_block].rate_area]
             else:
                 v.inc_ind_loc()
                 new_ind_block = self.blocks[v.loc_arrive].backup_block[v.ind_loc_current]
