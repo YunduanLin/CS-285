@@ -59,11 +59,12 @@ class vehicle():
 
 class parking_env():
     def __init__(self, df):
+        self.date = 
         self.t = 0
         mat_distance = self.great_circle_v(df['LONGITUDE'].values, df['LATITUDE'].values)
         self.blocks = [parking_block(record, mat_distance[i]) for i, record in enumerate(df.to_dict('records'))]
         self.vehicles = np.empty(0)
-        self.ob_dim = 1 + len(self.blocks)
+        self.ob_dim = 2 + len(self.blocks)
         self.ac_dim = len(self.blocks)
 
     def seed(self, s):
