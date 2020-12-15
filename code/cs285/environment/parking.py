@@ -111,16 +111,15 @@ class parking_env():
 
     def simulate_v_park(self, v, p):
         ind_cur_block = self.blocks[v.loc_arrive].backup_block[v.ind_loc_current]
-        if not self.blocks[ind_cur_block].is_full():
-            if p[self.blocks[ind_cur_block].rate_area] <= v.price_thresh:
-                v.parked = True
-                self.blocks[ind_cur_block].inc_v()
-                v.remaining_time = 2
-                v.fee = v.remaining_time * p[self.blocks[ind_cur_block].rate_area]
-            else:
-                v.inc_ind_loc()
-                new_ind_block = self.blocks[v.loc_arrive].backup_block[v.ind_loc_current]
-                v.cruising_dist = self.blocks[ind_cur_block].dist[new_ind_block]
+        if (not self.blocks[ind_cur_block].is_full()) | (p[self.blocks[ind_cur_block].rate_area] <= v.price_thresh):
+            v.parked = True
+            self.blocks[ind_cur_block].inc_v()
+            v.remaining_time = 2
+            v.fee = v.remaining_time * p[self.blocks[ind_cur_block].rate_area]
+        else:
+            v.inc_ind_loc()
+            new_ind_block = self.blocks[v.loc_arrive].backup_block[v.ind_loc_current]
+            v.cruising_dist = self.blocks[ind_cur_block].dist[new_ind_block]
 
     # simulate the parking behavior with choice model
     def do_simulation(self, a):
