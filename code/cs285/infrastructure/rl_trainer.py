@@ -44,8 +44,9 @@ class RL_Trainer(object):
         #############
 
         # Make the environment
-        df = pd.read_csv('../data/Meters/Meter_block.csv', '../data/demand.csv')
-        self.env = parking.parking_env(df)
+        df_block = pd.read_csv('../data/Meters/Meter_block.csv')
+        df_demand = pd.read_csv('../data/demand.csv')
+        self.env = parking.parking_env(df_block, df_demand)
         self.env.seed(seed)
 
         # Maximum length for episodes

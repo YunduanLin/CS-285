@@ -1,5 +1,5 @@
 import numpy as np
-from datatime import datatime, timedelta
+from datetime import datetime, timedelta
 
 EARTH_D = 6371
 MAX_E = 10
@@ -60,8 +60,9 @@ class vehicle():
 
 class parking_env():
     def __init__(self, df_block, df_demand):
-        self.date = datatime(2019,12,1)
+        self.date = datetime(2019,12,1)
         self.slot = 0
+        self.stage = 0
         self.df_demand = df_demand
         mat_distance = self.great_circle_v(df_block['LONGITUDE'].values, df_block['LATITUDE'].values)
         self.blocks = [parking_block(record, mat_distance[i]) for i, record in enumerate(df_block.to_dict('records'))]
@@ -72,7 +73,7 @@ class parking_env():
     def seed(self, s):
         np.random.seed(s)
 
-    def identify_stage(dt):
+    def identify_stage(self, dt):
         if dt < datetime(2020, 3, 15):
             return 0  # before
         elif (dt >= datetime(2020, 3, 15)) & (dt < datetime(2020, 5, 17)):
@@ -97,7 +98,10 @@ class parking_env():
     # generate demand for each block at time t
     def generate_demand(self):
         df = self.df_demand[(self.df_demand['slot'] == self.slot) & (self.df_demand['stage'] == self.stage)]
-        return np.random.normal(df['mean'].values, self.df_demand['std'].values, (1, len(df)))
+        d = np.random.normal(df['mean'].values, df['std'].values, len(df))
+        d = d.astype(int)
+        d[d<0] = 0
+        return d
 
     def simulate_v_park(self, v, p):
         ind_cur_block = self.blocks[v.loc_arrive].backup_block[v.ind_loc_current]
@@ -132,6 +136,7 @@ class parking_env():
         # parking vehicles
         num_parked_vehicles = len(self.vehicles)
         d = self.generate_demand()
+        print(d)
         for i, block in enumerate(self.blocks):
             self.vehicles = np.append(self.vehicles, [vehicle({'id': i}) for _ in range(d[i])])
         for t_e in range(MAX_E-1):
@@ -152,14 +157,14 @@ class parking_env():
     def step(self, a):
         reward = self.do_simulation(a)
         ob = self._get_obs()
-        done = self.date >= datatime(2020, 11, 30)
+        done = self.date >= datetime(2020, 11, 30)
         return ob, reward, done, None
 
     def _get_obs(self):
         return np.concatenate([[self.stage, self.slot], [block.occupied for block in self.blocks]])
 
     def reset_model(self):
-        self.date = datatime(2019,12,1)
+        self.date = datetime(2019,12,1)
         self.vehicles = np.empty(0)
         for b in self.blocks:
             b.reset()
