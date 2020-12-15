@@ -62,8 +62,6 @@ def sample_trajectory(env, policy, max_path_length, render=False, render_mode=('
     obs, acs, rewards, next_obs, terminals, image_obs = [], [], [], [], [], []
     steps = 0
     while True:
-
-
         # use the most recent ob to decide what to do
         obs.append(ob)
         ac = policy.get_action(ob)  # HINT: query the policy's get_action function

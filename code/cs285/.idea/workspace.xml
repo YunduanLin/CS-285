@@ -2,11 +2,19 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="13da8651-a757-4cdc-b101-ec14972669c2" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/../data/todo_15-12-2020_11-04-30/events.out.tfevents.1608059070.hayashintansMBP.lan" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../data/todo_15-12-2020_11-05-54/events.out.tfevents.1608059154.hayashintansMBP.lan" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../data/todo_15-12-2020_11-07-52/events.out.tfevents.1608059272.hayashintansMBP.lan" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../data/todo_15-12-2020_11-13-37/events.out.tfevents.1608059617.hayashintansMBP.lan" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../data/todo_15-12-2020_11-17-41/events.out.tfevents.1608059861.hayashintansMBP.lan" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../data/todo_15-12-2020_11-21-22/events.out.tfevents.1608060082.hayashintansMBP.lan" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../data/todo_15-12-2020_11-27-52/events.out.tfevents.1608060472.hayashintansMBP.lan" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/environment/parking.py" beforeDir="false" afterPath="$PROJECT_DIR$/environment/parking.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/infrastructure/rl_trainer.py" beforeDir="false" afterPath="$PROJECT_DIR$/infrastructure/rl_trainer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/infrastructure/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/infrastructure/utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/policies/MLP_policy.py" beforeDir="false" afterPath="$PROJECT_DIR$/policies/MLP_policy.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/run_parking.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/run_parking.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../preprocessing/.ipynb_checkpoints/demand-checkpoint.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/../preprocessing/.ipynb_checkpoints/demand-checkpoint.ipynb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../preprocessing/demand.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/../preprocessing/demand.ipynb" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

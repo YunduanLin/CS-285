@@ -6,6 +6,7 @@ MAX_E = 10
 VOT = 0.1
 SPEED = 30
 LOSS_COST = 5
+MAX_THRESH = 10
 
 class parking_block():
     def __init__(self, params, dist):
@@ -68,7 +69,7 @@ class parking_env():
         self.blocks = [parking_block(record, mat_distance[i]) for i, record in enumerate(df_block.to_dict('records'))]
         self.vehicles = np.empty(0)
         self.ob_dim = 2 + len(self.blocks)
-        self.ac_dim = len(self.blocks)
+        self.ac_dim = 1
 
     def seed(self, s):
         np.random.seed(s)
@@ -98,9 +99,7 @@ class parking_env():
     # generate demand for each block at time t
     def generate_demand(self):
         df = self.df_demand[(self.df_demand['slot'] == self.slot) & (self.df_demand['stage'] == self.stage)]
-        d = np.random.normal(df['mean'].values, df['std'].values, len(df))
-        d = d.astype(int)
-        d[d<0] = 0
+        d = np.random.poisson(df['mean'].values, len(df))
         return d
 
     def simulate_v_park(self, v, p):
@@ -110,7 +109,7 @@ class parking_env():
                 v.parked = True
                 self.blocks[ind_cur_block].inc_v()
                 v.remaining_time = 2
-                v.fee = v.remaining_time * p[ind_cur_block]
+                v.fee = v.remaining_time * p
             else:
                 v.inc_ind_loc()
                 new_ind_block = self.blocks[v.loc_arrive].backup_block[v.ind_loc_current]
@@ -136,7 +135,6 @@ class parking_env():
         # parking vehicles
         num_parked_vehicles = len(self.vehicles)
         d = self.generate_demand()
-        print(d)
         for i, block in enumerate(self.blocks):
             self.vehicles = np.append(self.vehicles, [vehicle({'id': i}) for _ in range(d[i])])
         for t_e in range(MAX_E-1):
