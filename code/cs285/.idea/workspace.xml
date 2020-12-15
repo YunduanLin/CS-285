@@ -1,13 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="13da8651-a757-4cdc-b101-ec14972669c2" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../preprocessing/.ipynb_checkpoints/demand-checkpoint.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/../preprocessing/.ipynb_checkpoints/demand-checkpoint.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../preprocessing/block_visualization.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/../preprocessing/block_visualization.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../preprocessing/demand.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/../preprocessing/demand.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../preprocessing/fetch_revenue.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/../preprocessing/fetch_revenue.ipynb" afterDir="false" />
-    </list>
+    <list default="true" id="13da8651-a757-4cdc-b101-ec14972669c2" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
