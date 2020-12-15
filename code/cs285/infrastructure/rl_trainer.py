@@ -44,7 +44,7 @@ class RL_Trainer(object):
         #############
 
         # Make the environment
-        df = pd.read_csv('../data/Meters/Meter_block.csv')
+        df = pd.read_csv('../data/Meters/Meter_block.csv', '../data/demand.csv')
         self.env = parking.parking_env(df)
         self.env.seed(seed)
 

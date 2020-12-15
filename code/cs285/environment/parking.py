@@ -159,7 +159,7 @@ class parking_env():
         return np.concatenate([[self.stage, self.slot], [block.occupied for block in self.blocks]])
 
     def reset_model(self):
-        self.t = 0
+        self.date = datatime(2019,12,1)
         self.vehicles = np.empty(0)
         for b in self.blocks:
             b.reset()
@@ -170,5 +170,5 @@ class parking_env():
         return ob
 
     def __str__(self):
-        return 'At time {t}, there are {num_b} blocks and {num_v} vehicles.'.format(
-                    t=self.t, num_b=len(self.blocks), num_v=len(self.vehicles))
+        return '{t}, there are {num_b} blocks and {num_v} vehicles.'.format(
+                    t=self.date, num_b=len(self.blocks), num_v=len(self.vehicles))
