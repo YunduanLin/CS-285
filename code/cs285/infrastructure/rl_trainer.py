@@ -185,6 +185,7 @@ class RL_Trainer(object):
 
             logs["Train_EnvstepsSoFar"] = self.total_envsteps
             logs["TimeSinceStart"] = time.time() - self.start_time
+            logs['DateTime'] = str(self.env.date)
             logs['Stage'] = self.env.stage
             logs.update(last_log)
 
