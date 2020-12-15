@@ -16,6 +16,7 @@ class parking_block():
         self.block_id = params['BLOCKFACE_ID']
         self.loc = (params['LONGITUDE'], params['LATITUDE'])
         self.capacity = params['SPACE_NUM']
+        self.rate_area = params['OLD_RATE_AREA']
         self.occupied = 0   # the count of occupied meters
         self.dist = np.sort(dist)
         self.backup_block = np.argsort(dist)    # the priority of back-up blocks
@@ -69,7 +70,8 @@ class parking_env():
         self.blocks = [parking_block(record, mat_distance[i]) for i, record in enumerate(df_block.to_dict('records'))]
         self.vehicles = np.empty(0)
         self.ob_dim = 2 + len(self.blocks)
-        self.ac_dim = 1
+        rate_area = dict(zip(df_block['OLD_RATE_AREA'].unique(), range(len(df_block['OLD_RATE_AREA'].unique()))))
+        self.ac_dim = len(df_block['OLD_RATE_AREA'].unique())
 
     def seed(self, s):
         np.random.seed(s)
