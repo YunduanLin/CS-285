@@ -176,6 +176,10 @@ class RL_Trainer(object):
             eval_actions_max = [np.max(eval_path["action"]) for eval_path in eval_paths]
             eval_actions_min = [np.min(eval_path["action"]) for eval_path in eval_paths]
 
+            # observations, for logging
+            print(eval_paths[0]["observation"])
+            eval_occupancy = [np.sum(eval_path["observation"][2:,:],axis=1) for eval_path in eval_paths]
+
             # decide what to log
             logs = OrderedDict()
             logs["Eval_AverageReturn"] = np.mean(eval_returns)
@@ -194,6 +198,7 @@ class RL_Trainer(object):
             logs["TimeSinceStart"] = time.time() - self.start_time
             logs['Eval_MaxAction'] = np.max(eval_actions_max)
             logs['Eval_MinAction'] = np.max(eval_actions_min)
+            logs['Eval_Occupancy'] = np.mean(eval_occupancy)
             logs['DateTime'] = int(self.env.date.strftime('%Y%m%d%H%M%S'))
             logs['Stage'] = self.env.stage
             logs.update(last_log)

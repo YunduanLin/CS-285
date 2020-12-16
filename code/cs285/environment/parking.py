@@ -7,7 +7,7 @@ MAX_E = 10
 VOT = 0.1
 SPEED = 30
 LOSS_COST = 10
-THRESH_MIN, THRESH_MAX = 0, 10
+THRESH_MIN, THRESH_MAX = 0, 1
 P_MIN, P_MAX = 0.5, 8
 
 class parking_block():
