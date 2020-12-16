@@ -61,7 +61,7 @@ def main():
     parser.add_argument('--env_name', type=str, default='parking')
     parser.add_argument('--ep_len', type=int, default=48)
     parser.add_argument('--exp_name', type=str, default='todo')
-    parser.add_argument('--n_iter', '-n', type=int, default=200)
+    parser.add_argument('--n_iter', '-n', type=int, default=100)
 
     parser.add_argument('--num_agent_train_steps_per_iter', type=int, default=1)
     parser.add_argument('--num_critic_updates_per_agent_update', type=int, default=1)
