@@ -53,6 +53,9 @@ class RL_Trainer(object):
 
         self.params['agent_params']['discrete'] = discrete # continuous action space
 
+        normal = True if self.params['policy'] == 'normal' else False
+
+        self.params['agent_params']['normal'] = normal
         # Observation and action sizes
 
         ob_dim = self.env.ob_dim

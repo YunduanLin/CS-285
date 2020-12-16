@@ -24,6 +24,7 @@ class MLPPolicy(BasePolicy, nn.Module, metaclass=abc.ABCMeta):
                  learning_rate=1e-4,
                  training=True,
                  nn_baseline=False,
+                 normal=True,
                  **kwargs
                  ):
         super().__init__(**kwargs)
@@ -37,6 +38,7 @@ class MLPPolicy(BasePolicy, nn.Module, metaclass=abc.ABCMeta):
         self.learning_rate = learning_rate
         self.training = training
         self.nn_baseline = nn_baseline
+        self.normal = normal
 
         if self.discrete:
             self.logits_na = ptu.build_mlp(input_size=self.ob_dim,
@@ -49,19 +51,33 @@ class MLPPolicy(BasePolicy, nn.Module, metaclass=abc.ABCMeta):
             self.optimizer = optim.Adam(self.logits_na.parameters(),
                                         self.learning_rate)
         else:
-            self.logits_na = None
-            self.mean_net = ptu.build_mlp(input_size=self.ob_dim,
-                                      output_size=self.ac_dim,
-                                      n_layers=self.n_layers, size=self.size)
-            self.logstd = nn.Parameter(
-                torch.zeros(self.ac_dim, dtype=torch.float32, device=ptu.device)
-            )
-            self.mean_net.to(ptu.device)
-            self.logstd.to(ptu.device)
-            self.optimizer = optim.Adam(
-                itertools.chain([self.logstd], self.mean_net.parameters()),
-                self.learning_rate
-            )
+            if self.normal:
+                self.logits_na = None
+                self.mean_net = ptu.build_mlp(input_size=self.ob_dim,
+                                          output_size=self.ac_dim,
+                                          n_layers=self.n_layers, size=self.size)
+                self.logstd = nn.Parameter(
+                    torch.zeros(self.ac_dim, dtype=torch.float32, device=ptu.device)
+                )
+                self.mean_net.to(ptu.device)
+                self.logstd.to(ptu.device)
+                self.optimizer = optim.Adam(
+                    itertools.chain([self.logstd], self.mean_net.parameters()),
+                    self.learning_rate
+                )
+            else:
+                self.logalpha = ptu.build_mlp(input_size=self.ob_dim,
+                                          output_size=self.ac_dim,
+                                          n_layers=self.n_layers, size=self.size)
+                self.logbeta = ptu.build_mlp(input_size=self.ob_dim,
+                                          output_size=self.ac_dim,
+                                          n_layers=self.n_layers, size=self.size)
+                self.logalpha.to(ptu.device)
+                self.logbeta.to(ptu.device)
+                self.optimizer = optim.Adam(
+                    itertools.chain(self.logalpha.parameters(), self.logbeta.parameters()),
+                    self.learning_rate
+                )
 
         if nn_baseline:
             self.baseline = ptu.build_mlp(
@@ -94,7 +110,6 @@ class MLPPolicy(BasePolicy, nn.Module, metaclass=abc.ABCMeta):
 
         observation = ptu.from_numpy(observation)
         action = self(observation).sample()
-        action[action<0] = 0
 
         return ptu.to_numpy(action)
 
@@ -112,14 +127,20 @@ class MLPPolicy(BasePolicy, nn.Module, metaclass=abc.ABCMeta):
             logits = self.logits_na(observation)
             action_distribution = distributions.Categorical(logits=logits)
         else:
-            batch_mean = self.mean_net(observation)
-            scale_tril = torch.diag(torch.exp(self.logstd))
-            batch_dim = batch_mean.shape[0]
-            batch_scale_tril = scale_tril.repeat(batch_dim, 1, 1)
-            action_distribution = distributions.MultivariateNormal(
-                batch_mean,
-                scale_tril=batch_scale_tril,
-            )
+            if self.normal:
+                batch_mean = self.mean_net(observation)
+                scale_tril = torch.diag(torch.exp(self.logstd))
+                batch_dim = batch_mean.shape[0]
+                batch_scale_tril = scale_tril.repeat(batch_dim, 1, 1)
+                action_distribution = distributions.MultivariateNormal(
+                    batch_mean,
+                    scale_tril=batch_scale_tril,
+                )
+            else:
+                action_distribution = distributions.beta.Beta(
+                    torch.FloatTensor(torch.exp(self.logalpha(observation))+1),
+                    torch.FloatTensor(torch.exp(self.logbeta(observation))+1)
+                )
         return action_distribution
 
 
@@ -139,7 +160,11 @@ class MLPPolicyPG(MLPPolicy):
         adv_n = ptu.from_numpy(adv_n)
 
         action_distribution = self(observations)
-        loss = - action_distribution.log_prob(actions) * adv_n
+        if self.normal:
+            distribution_log_prob = action_distribution.log_prob(actions)
+        else:
+            distribution_log_prob = torch.sum(action_distribution.log_prob(actions), axis=1)
+        loss = - distribution_log_prob * adv_n
         loss = loss.mean()
         self.optimizer.zero_grad()
         loss.backward()
@@ -184,7 +209,11 @@ class MLPPolicyAC(MLPPolicy):
 
         # TODO: update the policy and return the loss
         action_distribution = self(observations)
-        loss = - action_distribution.log_prob(actions) * adv_n
+        if self.normal:
+            distribution_log_prob = action_distribution.log_prob(actions)
+        else:
+            distribution_log_prob = torch.sum(action_distribution.log_prob(actions), axis=1)
+        loss = - distribution_log_prob * adv_n
         loss = loss.mean()
 
         self.optimizer.zero_grad()

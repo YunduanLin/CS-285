@@ -6,8 +6,8 @@ MAX_E = 10
 VOT = 0.1
 SPEED = 30
 LOSS_COST = 5
-THRESH_MIN = 0
-THRESH_MAX = 5
+THRESH_MIN, THRESH_MAX = 0, 5
+P_MIN, P_MAX = 0.5, 8
 
 class parking_block():
     def __init__(self, params, dist):
@@ -146,7 +146,7 @@ class parking_env():
         for t_e in range(MAX_E-1):
             for v in self.vehicles[num_parked_vehicles:]:
                 if not v.parked:
-                    self.simulate_v_park(v, a)
+                    self.simulate_v_park(v, P_MIN + (P_MAX-P_MIN) * a)
 
         reward = 0
         for v in self.vehicles[num_parked_vehicles:]:

@@ -25,7 +25,8 @@ class PGAgent(BaseAgent):
             self.agent_params['size'],
             discrete=self.agent_params['discrete'],
             learning_rate=self.agent_params['learning_rate'],
-            nn_baseline=self.agent_params['nn_baseline']
+            nn_baseline=self.agent_params['nn_baseline'],
+            normal=self.agent_params['normal']
         )
 
         # replay buffer

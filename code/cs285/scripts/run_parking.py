@@ -81,6 +81,8 @@ def main():
 
     parser.add_argument('--save_params', action='store_true')
 
+    parser.add_argument('--policy', type=str, default='normal')
+
     args = parser.parse_args()
 
     # convert to dictionary
