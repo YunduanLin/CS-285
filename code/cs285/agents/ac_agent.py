@@ -25,7 +25,7 @@ class ACAgent(BaseAgent):
             self.agent_params['size'],
             self.agent_params['discrete'],
             self.agent_params['learning_rate'],
-            self.agent_params['normal']
+            normal=self.agent_params['normal']
         )
         self.critic = BootstrappedContinuousCritic(self.agent_params)
 

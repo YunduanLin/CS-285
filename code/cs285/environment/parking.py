@@ -2,11 +2,12 @@ import numpy as np
 from datetime import datetime, timedelta
 
 EARTH_D = 7917.5 # mi
+LAT_D, LON_D = 69, 54.6
 MAX_E = 10
 VOT = 0.1
 SPEED = 30
-LOSS_COST = 5
-THRESH_MIN, THRESH_MAX = 0, 5
+LOSS_COST = 10
+THRESH_MIN, THRESH_MAX = 0, 10
 P_MIN, P_MAX = 0.5, 8
 
 class parking_block():
@@ -50,8 +51,7 @@ class vehicle():
         self.remaining_time = 0
 
     def dec_time(self):
-        if self.remaining_time > 0:
-            self.remaining_time -= 1
+        self.remaining_time = max(0, self.remaining_time - 1)
 
     def inc_ind_loc(self):
         self.ind_loc_current += 1
@@ -94,6 +94,24 @@ class parking_env():
         elif dt >= datetime(2020, 11, 13):
             return 6  # rollback
 
+    def cal_linear_coef(self, area):
+        if area == 2:
+            return 1200.6071  # downtown
+        elif area == 3:
+            return 0  # near downtown
+        elif area == 1:
+            return -1798.1531  # Residential
+        elif area in [4, 15, 13]:
+            return -102.1678  # Fisherman's Wharf
+        elif area in [10, 5]:
+            return 1454.1244  # North Embarcadero
+        elif area in [9, 7, 11, 14]:
+            return 2164.0275  # downtown port
+        elif area in [12, 6, 8]:
+            return 2935.8303  # South Embarcadero
+        else:
+            return 0
+
     # calculate the great circle distance for all the blocks with matrix form
     def great_circle_v(self, lon, lat):
         lon, lat = np.radians(lon), np.radians(lat)
@@ -101,7 +119,7 @@ class parking_env():
                 + np.cos(lat) * np.cos(lat).reshape(-1, 1) * np.cos(lon-lon.reshape(-1, 1)))
 
     def manhattan_v(self, lon, lat):
-        return 54.6 * np.abs(lon-lon.reshape(-1, 1)) + 69 * np.abs(lat-lat.reshape(-1, 1))
+        return LON_D * np.abs(lon-lon.reshape(-1, 1)) + LAT_D * np.abs(lat-lat.reshape(-1, 1))
 
     # generate demand for each block at time t
     def generate_demand(self):
@@ -114,7 +132,9 @@ class parking_env():
         if (not self.blocks[ind_cur_block].is_full()) | (p[self.blocks[ind_cur_block].rate_area] <= v.price_thresh):
             v.parked = True
             self.blocks[ind_cur_block].inc_v()
-            v.remaining_time = 2
+            parking_time = np.random.normal((self.cal_linear_coef(self.blocks[ind_cur_block]) + 7820.5177
+                            - 820.3637*p[self.blocks[ind_cur_block].rate_area]) / 3600, 1.28)
+            v.remaining_time = max(parking_time * 2, 0)
             v.fee = v.remaining_time * p[self.blocks[ind_cur_block].rate_area]
         else:
             v.inc_ind_loc()

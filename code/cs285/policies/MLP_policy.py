@@ -39,7 +39,6 @@ class MLPPolicy(BasePolicy, nn.Module, metaclass=abc.ABCMeta):
         self.training = training
         self.nn_baseline = nn_baseline
         self.normal = normal
-
         if self.discrete:
             self.logits_na = ptu.build_mlp(input_size=self.ob_dim,
                                            output_size=self.ac_dim,

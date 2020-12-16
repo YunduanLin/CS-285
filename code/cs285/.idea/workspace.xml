@@ -2,18 +2,17 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="13da8651-a757-4cdc-b101-ec14972669c2" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../data/ac_todo_15-12-2020_22-38-07/events.out.tfevents.1608100687.hayashintansMBP.lan" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../.ipynb_checkpoints/read_results-checkpoint.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/../.ipynb_checkpoints/read_results-checkpoint.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/agents/ac_agent.py" beforeDir="false" afterPath="$PROJECT_DIR$/agents/ac_agent.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/agents/pg_agent.py" beforeDir="false" afterPath="$PROJECT_DIR$/agents/pg_agent.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/environment/parking.py" beforeDir="false" afterPath="$PROJECT_DIR$/environment/parking.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/infrastructure/rl_trainer.py" beforeDir="false" afterPath="$PROJECT_DIR$/infrastructure/rl_trainer.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/policies/MLP_policy.py" beforeDir="false" afterPath="$PROJECT_DIR$/policies/MLP_policy.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/run_parking.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/run_parking.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/run_parking_actor_critic.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/run_parking_actor_critic.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../data/ac_todo_CartPole-v0_15-12-2020_17-39-26/events.out.tfevents.1608082766.hayashintansMBP.lan" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../data/ac_todo_15-12-2020_22-38-48/events.out.tfevents.1608100728.hayashintansMBP.lan" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../data/todo_15-12-2020_16-34-33/events.out.tfevents.1608078873.hayashintansMBP.lan" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../preprocessing/.ipynb_checkpoints/block_visualization-checkpoint.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/../preprocessing/.ipynb_checkpoints/block_visualization-checkpoint.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../preprocessing/block_visualization.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/../preprocessing/block_visualization.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../preprocessing/demand.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/../preprocessing/demand.ipynb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../read_results.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/../read_results.ipynb" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
