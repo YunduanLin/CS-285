@@ -3,7 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="13da8651-a757-4cdc-b101-ec14972669c2" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/../.ipynb_checkpoints/read_results-checkpoint.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/../.ipynb_checkpoints/read_results-checkpoint.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../data/pg_b_rtg_sa_l_3_16-12-2020_07-30-47/events.out.tfevents.1608132647.hayashintansMBP.lan" beforeDir="false" afterPath="$PROJECT_DIR$/../data/pg_b_rtg_sa_l_3_16-12-2020_07-30-47/events.out.tfevents.1608132647.hayashintansMBP.lan" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../read_results.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/../read_results.ipynb" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

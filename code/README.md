@@ -20,11 +20,12 @@ python cs285/scripts/run_parking.py -rtg --exp_name n_rtg_sa
 ```
 python cs285/scripts/run_parking.py -rtg -l 3 --policy beta --exp_name b_rtg_sa_l_3
 python cs285/scripts/run_parking.py -rtg -l 4 --policy beta --exp_name b_rtg_sa_l_4
-
 ```
 
 ## Actor-critic
 (Qianhua)
 ```
-python cs285/scripts/run_parking_actor_critic.py -ntu 1 -ngsptu 1 --policy beta --exp_name b
+python cs285/scripts/run_parking_actor_critic.py -ntu 1 -ngsptu 1 --policy beta --exp_name b_ntu_1_ngsptu_1
+python cs285/scripts/run_parking_actor_critic.py -ntu 10 -ngsptu 1 --policy beta --exp_name b_ntu_10_ngsptu_1
+python cs285/scripts/run_parking_actor_critic.py -ntu 1 -ngsptu 10 --policy beta --exp_name b_ntu_1_ngsptu_10
 ```
