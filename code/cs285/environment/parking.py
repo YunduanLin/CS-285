@@ -6,7 +6,7 @@ MAX_E = 10
 VOT = 0.1
 SPEED = 30
 LOSS_COST = 5
-THRESH_MIN = 2
+THRESH_MIN = 0
 THRESH_MAX = 5
 
 class parking_block():
@@ -168,7 +168,8 @@ class parking_env():
         return np.concatenate([[self.stage, self.slot], [block.occupied for block in self.blocks]])
 
     def reset_model(self):
-        self.date = datetime(2019,12,1)
+        self.date = datetime(2019,12,1) + timedelta(np.random.randint(0, 366))
+        self.stage = self.identify_stage(self.date)
         self.vehicles = np.empty(0)
         for b in self.blocks:
             b.reset()
