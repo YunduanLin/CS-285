@@ -2,14 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="13da8651-a757-4cdc-b101-ec14972669c2" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../data/ac_b_ntu_10_ngsptu_1_16-12-2020_12-41-26/events.out.tfevents.1608151286.hayashintansMBP.lan" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../data/ac_b_ntu_1_ngsptu_10_16-12-2020_12-41-29/events.out.tfevents.1608151289.hayashintansMBP.lan" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../data/ac_b_ntu_1_ngsptu_1_16-12-2020_12-41-25/events.out.tfevents.1608151285.hayashintansMBP.lan" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../data/pg_b_16-12-2020_12-41-18/events.out.tfevents.1608151278.hayashintansMBP.lan" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../data/pg_b_rtg_16-12-2020_12-41-20/events.out.tfevents.1608151280.hayashintansMBP.lan" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../data/pg_b_rtg_sa_16-12-2020_12-41-22/events.out.tfevents.1608151282.hayashintansMBP.lan" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/infrastructure/rl_trainer.py" beforeDir="false" afterPath="$PROJECT_DIR$/infrastructure/rl_trainer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.ipynb_checkpoints/read_results-checkpoint.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/../.ipynb_checkpoints/read_results-checkpoint.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../read_results.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/../read_results.ipynb" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
