@@ -177,7 +177,7 @@ class RL_Trainer(object):
             eval_actions_min = [np.min(eval_path["action"]) for eval_path in eval_paths]
 
             # observations, for logging
-            eval_occupancy = [np.sum(eval_path["observation"][2:,:],axis=1) for eval_path in eval_paths]
+            eval_occupancy = [np.mean(np.sum(eval_path["observation"][2:,:],axis=1)) for eval_path in eval_paths]
 
             # decide what to log
             logs = OrderedDict()
