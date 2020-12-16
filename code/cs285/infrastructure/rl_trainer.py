@@ -44,19 +44,11 @@ class RL_Trainer(object):
         #############
 
         # Make the environment
-        df = pd.read_csv('../data/Meters/Meter_block.csv')
-        self.env = parking.parking_env(df)
+        df_block = pd.read_csv('../data/Meters/Meter_block.csv')
+        df_demand = pd.read_csv('../data/demand.csv')
+        self.env = parking.parking_env(df_block, df_demand)
         self.env.seed(seed)
 
-        # Maximum length for episodes
-        # self.params['ep_len'] = self.params['ep_len'] or self.env.spec.max_episode_steps
-        global MAX_VIDEO_LEN
-        MAX_VIDEO_LEN = self.params['ep_len']
-
-        # Is this env continuous, or self.discrete?
-        # discrete = isinstance(self.env.action_space, gym.spaces.Discrete)
-        # Are the observations images?
-        # img = len(self.env.observation_space.shape) > 2
         discrete = False
 
         self.params['agent_params']['discrete'] = discrete # continuous action space
@@ -79,7 +71,7 @@ class RL_Trainer(object):
                           initial_expertdata=None, relabel_with_expert=False,
                           start_relabel_with_expert=1, expert_policy=None):
         """
-        :param n_iter:  number of (dagger) iterations
+        :param n_iter:  number of iterations
         :param collect_policy:
         :param eval_policy:
         :param initial_expertdata:
@@ -148,7 +140,6 @@ class RL_Trainer(object):
         for train_step in range(self.params['num_agent_train_steps_per_iter']):
             ob_batch, ac_batch, re_batch, next_ob_batch, terminal_batch = self.agent.sample(
                 self.params['train_batch_size'])
-
             train_log = self.agent.train(ob_batch, ac_batch, re_batch, next_ob_batch, terminal_batch)
             all_logs.append(train_log)
         return all_logs
@@ -194,6 +185,8 @@ class RL_Trainer(object):
 
             logs["Train_EnvstepsSoFar"] = self.total_envsteps
             logs["TimeSinceStart"] = time.time() - self.start_time
+            logs['DateTime'] = int(self.env.date.strftime('%Y%m%d%H%M%S'))
+            logs['Stage'] = self.env.stage
             logs.update(last_log)
 
             if itr == 0:

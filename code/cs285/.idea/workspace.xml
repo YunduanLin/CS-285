@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="13da8651-a757-4cdc-b101-ec14972669c2" name="Default Changelist" comment="" />
+    <list default="true" id="13da8651-a757-4cdc-b101-ec14972669c2" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/scripts/run_parking_actor_critic.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../data/ac_ todo_CartPole-v0_15-12-2020_17-28-39/events.out.tfevents.1608082119.hayashintansMBP.lan" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.ipynb_checkpoints/read_results-checkpoint.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/../.ipynb_checkpoints/read_results-checkpoint.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/policies/MLP_policy.py" beforeDir="false" afterPath="$PROJECT_DIR$/policies/MLP_policy.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/run_parking.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/run_parking.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../read_results.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/../read_results.ipynb" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />

@@ -1,11 +1,13 @@
 import numpy as np
-from datatime import datatime, timedelta
+from datetime import datetime, timedelta
 
-EARTH_D = 6371
+EARTH_D = 7917.5 # mi
 MAX_E = 10
 VOT = 0.1
 SPEED = 30
 LOSS_COST = 5
+THRESH_MIN = 0
+THRESH_MAX = 5
 
 class parking_block():
     def __init__(self, params, dist):
@@ -15,6 +17,7 @@ class parking_block():
         self.block_id = params['BLOCKFACE_ID']
         self.loc = (params['LONGITUDE'], params['LATITUDE'])
         self.capacity = params['SPACE_NUM']
+        self.rate_area = params['OLD_RATE_AREA_id']
         self.occupied = 0   # the count of occupied meters
         self.dist = np.sort(dist)
         self.backup_block = np.argsort(dist)    # the priority of back-up blocks
@@ -39,6 +42,7 @@ class parking_block():
 class vehicle():
     def __init__(self, params):
         self.loc_arrive = params['id']
+        self.price_thresh = np.random.uniform(THRESH_MIN, THRESH_MAX)
         self.ind_loc_current = 0
         self.cruising_dist = 0
         self.parked = False
@@ -60,19 +64,21 @@ class vehicle():
 
 class parking_env():
     def __init__(self, df_block, df_demand):
-        self.date = datatime(2019,12,1)
+        self.date = datetime(2019,12,1)
         self.slot = 0
+        self.stage = 0
         self.df_demand = df_demand
-        mat_distance = self.great_circle_v(df_block['LONGITUDE'].values, df_block['LATITUDE'].values)
+        # mat_distance = self.great_circle_v(df_block['LONGITUDE'].values, df_block['LATITUDE'].values)
+        mat_distance = self.manhattan_v(df_block['LONGITUDE'].values, df_block['LATITUDE'].values)
         self.blocks = [parking_block(record, mat_distance[i]) for i, record in enumerate(df_block.to_dict('records'))]
         self.vehicles = np.empty(0)
         self.ob_dim = 2 + len(self.blocks)
-        self.ac_dim = len(self.blocks)
+        self.ac_dim = len(df_block['OLD_RATE_AREA_id'].unique())
 
     def seed(self, s):
         np.random.seed(s)
 
-    def identify_stage(dt):
+    def identify_stage(self, dt):
         if dt < datetime(2020, 3, 15):
             return 0  # before
         elif (dt >= datetime(2020, 3, 15)) & (dt < datetime(2020, 5, 17)):
@@ -94,23 +100,26 @@ class parking_env():
         return EARTH_D * np.arccos(np.sin(lat) * np.sin(lat).reshape(-1, 1) \
                 + np.cos(lat) * np.cos(lat).reshape(-1, 1) * np.cos(lon-lon.reshape(-1, 1)))
 
+    def manhattan_v(self, lon, lat):
+        return 54.6 * np.abs(lon-lon.reshape(-1, 1)) + 69 * np.abs(lat-lat.reshape(-1, 1))
+
     # generate demand for each block at time t
     def generate_demand(self):
         df = self.df_demand[(self.df_demand['slot'] == self.slot) & (self.df_demand['stage'] == self.stage)]
-        return np.random.normal(df['mean'].values, self.df_demand['std'].values, (1, len(df)))
+        d = np.random.poisson(df['mean'].values, len(df))
+        return d
 
     def simulate_v_park(self, v, p):
         ind_cur_block = self.blocks[v.loc_arrive].backup_block[v.ind_loc_current]
-        if not self.blocks[ind_cur_block].is_full():
-            if np.random.rand() > 0.1:
-                v.parked = True
-                self.blocks[ind_cur_block].inc_v()
-                v.remaining_time = 2
-                v.fee = v.remaining_time * p[ind_cur_block]
-            else:
-                v.inc_ind_loc()
-                new_ind_block = self.blocks[v.loc_arrive].backup_block[v.ind_loc_current]
-                v.cruising_dist = self.blocks[ind_cur_block].dist[new_ind_block]
+        if (not self.blocks[ind_cur_block].is_full()) | (p[self.blocks[ind_cur_block].rate_area] <= v.price_thresh):
+            v.parked = True
+            self.blocks[ind_cur_block].inc_v()
+            v.remaining_time = 2
+            v.fee = v.remaining_time * p[self.blocks[ind_cur_block].rate_area]
+        else:
+            v.inc_ind_loc()
+            new_ind_block = self.blocks[v.loc_arrive].backup_block[v.ind_loc_current]
+            v.cruising_dist = self.blocks[ind_cur_block].dist[new_ind_block]
 
     # simulate the parking behavior with choice model
     def do_simulation(self, a):
@@ -152,14 +161,15 @@ class parking_env():
     def step(self, a):
         reward = self.do_simulation(a)
         ob = self._get_obs()
-        done = self.date >= datatime(2020, 11, 30)
+        done = self.date >= datetime(2020, 11, 30)
         return ob, reward, done, None
 
     def _get_obs(self):
         return np.concatenate([[self.stage, self.slot], [block.occupied for block in self.blocks]])
 
     def reset_model(self):
-        self.t = 0
+        self.date = datetime(2019,12,1) + timedelta(np.random.randint(0, 366))
+        self.stage = self.identify_stage(self.date)
         self.vehicles = np.empty(0)
         for b in self.blocks:
             b.reset()
@@ -170,5 +180,5 @@ class parking_env():
         return ob
 
     def __str__(self):
-        return 'At time {t}, there are {num_b} blocks and {num_v} vehicles.'.format(
-                    t=self.t, num_b=len(self.blocks), num_v=len(self.vehicles))
+        return '{t}, there are {num_b} blocks and {num_v} vehicles.'.format(
+                    t=self.date, num_b=len(self.blocks), num_v=len(self.vehicles))

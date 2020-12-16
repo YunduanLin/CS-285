@@ -94,6 +94,7 @@ class MLPPolicy(BasePolicy, nn.Module, metaclass=abc.ABCMeta):
 
         observation = ptu.from_numpy(observation)
         action = self(observation).sample()
+        action[action<0] = 0
 
         return ptu.to_numpy(action)
 
@@ -140,7 +141,6 @@ class MLPPolicyPG(MLPPolicy):
         action_distribution = self(observations)
         loss = - action_distribution.log_prob(actions) * adv_n
         loss = loss.mean()
-
         self.optimizer.zero_grad()
         loss.backward()
         self.optimizer.step()
@@ -174,3 +174,21 @@ class MLPPolicyPG(MLPPolicy):
         predictions = self.baseline(obs)
         return ptu.to_numpy(predictions)[:, 0]
 
+
+class MLPPolicyAC(MLPPolicy):
+    def update(self, observations, actions, adv_n=None):
+
+        observations = ptu.from_numpy(observations)
+        actions = ptu.from_numpy(actions)
+        adv_n = ptu.from_numpy(adv_n)
+
+        # TODO: update the policy and return the loss
+        action_distribution = self(observations)
+        loss = - action_distribution.log_prob(actions) * adv_n
+        loss = loss.mean()
+
+        self.optimizer.zero_grad()
+        loss.backward()
+        self.optimizer.step()
+
+        return loss.item()
