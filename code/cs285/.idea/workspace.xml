@@ -2,12 +2,20 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="13da8651-a757-4cdc-b101-ec14972669c2" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/../data/ac_b_ntu_1_ngsptu_10_16-12-2020_11-49-01/events.out.tfevents.1608148141.hayashintansMBP.lan" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.ipynb_checkpoints/read_results-checkpoint.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/../.ipynb_checkpoints/read_results-checkpoint.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/infrastructure/rl_trainer.py" beforeDir="false" afterPath="$PROJECT_DIR$/infrastructure/rl_trainer.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../data/ac_b_ntu_10_ngsptu_1_16-12-2020_07-48-45/events.out.tfevents.1608133725.hayashintansMBP.lan" beforeDir="false" afterPath="$PROJECT_DIR$/../data/ac_b_ntu_10_ngsptu_1_16-12-2020_07-48-45/events.out.tfevents.1608133725.hayashintansMBP.lan" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../data/ac_b_ntu_1_ngsptu_10_16-12-2020_07-49-02/events.out.tfevents.1608133742.hayashintansMBP.lan" beforeDir="false" afterPath="$PROJECT_DIR$/../data/ac_b_ntu_1_ngsptu_10_16-12-2020_07-49-02/events.out.tfevents.1608133742.hayashintansMBP.lan" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../data/ac_b_ntu_1_ngsptu_1_16-12-2020_07-48-38/events.out.tfevents.1608133718.hayashintansMBP.lan" beforeDir="false" afterPath="$PROJECT_DIR$/../data/ac_b_ntu_1_ngsptu_1_16-12-2020_07-48-38/events.out.tfevents.1608133718.hayashintansMBP.lan" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../data/pg_b_rtg_sa_l_3_16-12-2020_07-30-47/events.out.tfevents.1608132647.hayashintansMBP.lan" beforeDir="false" afterPath="$PROJECT_DIR$/../data/pg_b_rtg_sa_l_3_16-12-2020_07-30-47/events.out.tfevents.1608132647.hayashintansMBP.lan" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../data/ac_b_ntu_10_ngsptu_1_16-12-2020_07-48-45/events.out.tfevents.1608133725.hayashintansMBP.lan" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../data/ac_b_ntu_1_ngsptu_10_16-12-2020_07-49-02/events.out.tfevents.1608133742.hayashintansMBP.lan" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../data/ac_b_ntu_1_ngsptu_1_16-12-2020_07-48-38/events.out.tfevents.1608133718.hayashintansMBP.lan" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../data/pg_b_rtg_sa_16-12-2020_07-32-14/events.out.tfevents.1608132734.hayashintansMBP.lan" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../data/pg_b_rtg_sa_l_3_16-12-2020_07-30-47/events.out.tfevents.1608132647.hayashintansMBP.lan" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../data/pg_b_rtg_sa_l_4_16-12-2020_07-31-49/events.out.tfevents.1608132709.hayashintansMBP.lan" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../data/pg_n_16-12-2020_11-18-58/events.out.tfevents.1608146338.hayashintansMBP.lan" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../data/pg_n_16-12-2020_11-22-44/events.out.tfevents.1608146564.hayashintansMBP.lan" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../data/pg_n_16-12-2020_11-23-43/events.out.tfevents.1608146623.hayashintansMBP.lan" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../read_results.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/../read_results.ipynb" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
